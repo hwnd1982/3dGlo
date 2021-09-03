@@ -18,14 +18,15 @@
       }
       return { hours, minutes, seconds };
     },
-    updateClock = (() => {
+    updateClock = () => {
       const { hours, minutes, seconds } = getTimerRemaining();
 
       timerHours.textContent = hours < 10 ? '0' + hours : hours;
       timerMinutes.textContent = ('0' + minutes).slice(-2);
       timerSeconds.textContent = ('0' + seconds).slice(-2);
-    })();
+    };
+  updateClock();
   id = setInterval(updateClock, 1000);
-})('4 sept 2021');
+})('5 sept 2021');
 
 

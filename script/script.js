@@ -37,11 +37,7 @@
     closeBtn = document.querySelector('.close-btn'),
     menuItems = menu.querySelectorAll('ul>li'),
     hendlerMenu = () => {
-      if (!menu.style.transform || menu.style.transform === `translate(-100%)`) {
-        menu.style.transform = `translate(0)`;
-      } else {
-        menu.style.transform = `translate(-100%)`;
-      }
+      menu.classList.toggle('active-menu');
     };
 
   btn.addEventListener('click', hendlerMenu);

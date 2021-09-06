@@ -29,20 +29,31 @@
   id = setInterval(updateClock, 1000);
 })('10 sept 2021');
 
-// Menu
+// Menu & smoothScroll
 (() => {
   const
     btn = document.querySelector('.menu'),
     menu = document.querySelector('menu'),
     closeBtn = document.querySelector('.close-btn'),
     menuItems = menu.querySelectorAll('ul>li'),
+    scrollBtn = document.querySelector('main>a'),
     hendlerMenu = () => {
       menu.classList.toggle('active-menu');
+    },
+    smoothScroll = event => {
+      const href = event.target.getAttribute('href') || event.target.parentElement.getAttribute('href');
+
+      event.preventDefault();
+      document.querySelector(href).scrollIntoView({ block: "center", behavior: "smooth" });
     };
 
   btn.addEventListener('click', hendlerMenu);
   closeBtn.addEventListener('click', hendlerMenu);
-  menuItems.forEach(item => item.addEventListener('click', hendlerMenu));
+  menuItems.forEach(item => item.addEventListener('click', event => {
+    hendlerMenu();
+    smoothScroll(event);
+  }));
+  scrollBtn.addEventListener('click', smoothScroll);
 })();
 
 // popUp

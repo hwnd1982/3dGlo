@@ -41,7 +41,9 @@
       menu.classList.toggle('active-menu');
     },
     smoothScroll = event => {
-      const href = event.target.getAttribute('href') || event.target.parentElement.getAttribute('href');
+      const
+        href = event.currentTarget.getAttribute('href') ||
+          event.currentTarget.firstElementChild.getAttribute('href');
 
       event.preventDefault();
       document.querySelector(href).scrollIntoView({ block: "center", behavior: "smooth" });

@@ -29,6 +29,17 @@
   id = setInterval(updateClock, 1000);
 })('10 sept 2021');
 
+const
+  smoothScrollOfLink = event => {
+    const
+      href = (event.currentTarget.getAttribute('href') ||
+        event.currentTarget.querySelector('a').getAttribute('href')),
+      domRect = href !== '#' ? document.querySelector(href).getBoundingClientRect() : 0;
+
+    event.preventDefault();
+    scrollTo({ top: domRect ? domRect.y : 0, behavior: "smooth" });
+  };
+
 // Menu & smoothScroll
 (() => {
   const
@@ -39,23 +50,15 @@
     scrollBtn = document.querySelector('main>a'),
     hendlerMenu = () => {
       menu.classList.toggle('active-menu');
-    },
-    smoothScroll = event => {
-      const
-        href = event.currentTarget.getAttribute('href') ||
-          event.currentTarget.firstElementChild.getAttribute('href');
-
-      event.preventDefault();
-      document.querySelector(href).scrollIntoView({ block: "center", behavior: "smooth" });
     };
 
   btn.addEventListener('click', hendlerMenu);
   closeBtn.addEventListener('click', hendlerMenu);
   menuItems.forEach(item => item.addEventListener('click', event => {
     hendlerMenu();
-    smoothScroll(event);
+    smoothScrollOfLink(event);
   }));
-  scrollBtn.addEventListener('click', smoothScroll);
+  scrollBtn.addEventListener('click', smoothScrollOfLink);
 })();
 
 // popUp
@@ -104,3 +107,5 @@
     popUp.style.display = 'none';
   });
 })();
+
+document.querySelectorAll('a[href="#"]').forEach(item => item.addEventListener('click', smoothScrollOfLink));

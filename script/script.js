@@ -32,33 +32,40 @@
 const
   smoothScrollOfLink = event => {
     const
-      href = (event.currentTarget.getAttribute('href') ||
-        event.currentTarget.querySelector('a').getAttribute('href')),
-      domRect = href !== '#' ? document.querySelector(href).getBoundingClientRect() : 0;
+      target = event.target.tagName === 'A' ? event.target : event.target.closest('a');
+    if (target) {
+      const
+        href = target.getAttribute('href'),
+        domRect = href !== '#' ? document.querySelector(href).getBoundingClientRect() : 0;
 
-    event.preventDefault();
-    scrollTo({ top: domRect ? domRect.y : 0, behavior: "smooth" });
+      event.preventDefault();
+      scrollTo({ top: domRect ? domRect.top + window.pageYOffset : 0, behavior: "smooth" });
+    }
   };
+
+// smooth Scroll on additional links
+document.querySelector('main>a').addEventListener('click', smoothScrollOfLink);
+document.querySelectorAll('a[href="#"]').forEach(item => item.addEventListener('click', smoothScrollOfLink));
 
 // Menu & smoothScroll
 (() => {
   const
-    btn = document.querySelector('.menu'),
     menu = document.querySelector('menu'),
-    closeBtn = document.querySelector('.close-btn'),
-    menuItems = menu.querySelectorAll('ul>li'),
-    scrollBtn = document.querySelector('main>a'),
-    hendlerMenu = () => {
-      menu.classList.toggle('active-menu');
-    };
+    hendlerMenu = event => {
+      const target = event.target;
 
-  btn.addEventListener('click', hendlerMenu);
-  closeBtn.addEventListener('click', hendlerMenu);
-  menuItems.forEach(item => item.addEventListener('click', event => {
-    hendlerMenu();
-    smoothScrollOfLink(event);
-  }));
-  scrollBtn.addEventListener('click', smoothScrollOfLink);
+      if (target.closest('.menu')) {
+        menu.classList.add('active-menu');
+      } else {
+        if (target.classList.contains('close-btn') || target.closest('menu>ul>li>a')) {
+          menu.classList.remove('active-menu');
+          if (target.closest('menu>ul>li>a')) {
+            smoothScrollOfLink(event);
+          }
+        }
+      }
+    };
+  document.addEventListener('click', hendlerMenu);
 })();
 
 // popUp
@@ -66,7 +73,6 @@ const
   const
     popUp = document.querySelector('.popup'),
     popUpBtns = document.querySelectorAll('.popup-btn'),
-    popupClose = document.querySelector('.popup-close'),
     animatePopUp = delay => {
       let count = 0;
       const
@@ -103,9 +109,32 @@ const
       }
     });
   });
-  popupClose.addEventListener('click', () => {
-    popUp.style.display = 'none';
+  popUp.addEventListener('click', ({ target }) => {
+    target.classList.contains('popup-close') || !target.closest('.popup-content') ?
+      popUp.style.display = 'none' : null;
+
   });
 })();
 
-document.querySelectorAll('a[href="#"]').forEach(item => item.addEventListener('click', smoothScrollOfLink));
+// tabs
+(() => {
+  const
+    tabsHeader = document.querySelector('.service-header'),
+    tabs = document.querySelectorAll('.service-header-tab'),
+    tabsContent = document.querySelectorAll('.service-tab'),
+    showContent = index => {
+      tabs[index].classList.add('active');
+      tabsContent[index].classList.remove('d-none');
+    },
+    hideContent = index => {
+      tabs[index].classList.remove('active');
+      tabsContent[index].classList.add('d-none');
+    };
+
+  tabsHeader.addEventListener('click', ({ target }) => {
+    target = target.closest('.service-header-tab');
+    if (target) {
+      tabs.forEach((item, index) => (item === target ? showContent(index) : hideContent(index)));
+    }
+  });
+})();

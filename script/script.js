@@ -43,10 +43,6 @@ const
     }
   };
 
-// smooth Scroll on additional links
-document.querySelector('main>a').addEventListener('click', smoothScrollOfLink);
-document.querySelectorAll('a[href="#"]').forEach(item => item.addEventListener('click', smoothScrollOfLink));
-
 // Menu & smoothScroll
 (() => {
   const
@@ -57,9 +53,10 @@ document.querySelectorAll('a[href="#"]').forEach(item => item.addEventListener('
       if (target.closest('.menu')) {
         menu.classList.add('active-menu');
       } else {
-        if (target.classList.contains('close-btn') || target.closest('menu>ul>li>a')) {
+        if (!target.closest('menu') || target.classList.contains('close-btn') || target.closest('menu>ul>li>a')) {
           menu.classList.remove('active-menu');
-          if (target.closest('menu>ul>li>a')) {
+          // smooth Scroll on additional & menu links
+          if (target.closest('menu>ul>li>a') || target.closest('main>a') || target.closest('a[href="#"]')) {
             smoothScrollOfLink(event);
           }
         }

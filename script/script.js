@@ -203,16 +203,8 @@ const smoothScrollOfLink = event => {
 (() => {
   const
     command = document.getElementById('command'),
-    toggleDataImg = ({ target }) => {
-      if (!target.matches('.command__photo')) {
-        return;
-      } else {
-        const currentImg = target.src;
-
-        target.src = target.dataset.img;
-        target.dataset.img = currentImg;
-      }
-    };
+    toggleDataImg = ({ target }) => (!target.matches('.command__photo') ? null :
+      [target.dataset.img, target.src] = [target.src, target.dataset.img]);
 
   command.addEventListener('mouseover', toggleDataImg);
   command.addEventListener('mouseout', toggleDataImg);

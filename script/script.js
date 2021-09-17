@@ -29,19 +29,18 @@
   id = setInterval(updateClock, 1000);
 })('10 sept 2021');
 
-const
-  smoothScrollOfLink = event => {
+const smoothScrollOfLink = event => {
+  const
+    target = event.target.tagName === 'A' ? event.target : event.target.closest('a');
+  if (target) {
     const
-      target = event.target.tagName === 'A' ? event.target : event.target.closest('a');
-    if (target) {
-      const
-        href = target.getAttribute('href'),
-        domRect = href !== '#' ? document.querySelector(href).getBoundingClientRect() : 0;
+      href = target.getAttribute('href'),
+      domRect = href !== '#' ? document.querySelector(href).getBoundingClientRect() : 0;
 
-      event.preventDefault();
-      scrollTo({ top: domRect ? domRect.top + window.pageYOffset : 0, behavior: "smooth" });
-    }
-  };
+    event.preventDefault();
+    scrollTo({ top: domRect ? domRect.top + window.pageYOffset : 0, behavior: "smooth" });
+  }
+};
 
 // Menu & smoothScroll
 (() => {
@@ -198,4 +197,47 @@ const
     (event.target.matches('.portfolio-btn, .dot') ? startSlider(1500) : null));
 
   startSlider(1500);
+})();
+
+// switchTeamPhoto
+(() => {
+  const
+    command = document.getElementById('command'),
+    toggleDataImg = ({ target }) => {
+      if (!target.matches('.command__photo')) {
+        return;
+      } else {
+        const currentImg = target.src;
+
+        target.src = target.dataset.img;
+        target.dataset.img = currentImg;
+      }
+    };
+
+  command.addEventListener('mouseover', toggleDataImg);
+  command.addEventListener('mouseout', toggleDataImg);
+})();
+
+// Input
+(() => {
+  document.addEventListener('input', ({ target }) => {
+    if (!target.matches('input.calc-item, input.top-form, .mess')) {
+      return;
+    }
+    target.matches('input.calc-item') ? target.value = target.value.replace(/\D/g, '') : null;
+    if (target.matches('input.top-form, .mess')) {
+      target.matches('#form2-name, #form2-message') ? target.value = target.value.replace(/[^а-яё-\s]+/gi, '') : null;
+      target.matches('#form2-email') ? target.value = target.value.replace(/[^\w"@-_.!~*']+/gi, '') : null;
+      target.matches('#form2-phone') ? target.value = target.value.replace(/[^\d()-]+/g, '') : null;
+    }
+  });
+  document.addEventListener('blur', ({ target }) => {
+    if (!target.matches('input.top-form, .mess')) {
+      return;
+    }
+    target.value = target.value.replace(/([\s-()])(?=[\s-()]*\1)/g, '')
+      .replace(/^([\s-]*)|([\s-]*)$/g, '');
+    target.matches('#form2-name') ? target.value = target.value
+      .replace(/[^-\s]+/gi, str => str[0].toUpperCase() + str.slice(1).toLowerCase()) : null;
+  }, true);
 })();

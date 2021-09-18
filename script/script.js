@@ -210,7 +210,7 @@ const smoothScrollOfLink = event => {
   command.addEventListener('mouseout', toggleDataImg);
 })();
 
-// Input
+// inputHandling
 (() => {
   const
     inputData = {

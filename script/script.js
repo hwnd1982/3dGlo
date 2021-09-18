@@ -226,12 +226,30 @@ const smoothScrollOfLink = event => {
       'input[name="user_phone"]': { input: [/[^\d()-]+/g, ''] },
       'input[name="user_message"]': { input: [/[^а-яё-\s]+/gi, ''] }
     },
-    getKey = target => (target.tagName === 'INPUT' ?
-      target.getAttribute('name') ? `${target.tagName.toLowerCase()}[name="${target.getAttribute('name')}"]` :
-        target.classList[0] ? `${target.tagName.toLowerCase()}.${target.classList[0]}` : null : null),
-    inputHandling  = (target, types = 'input') => (getKey(target) ? types.split(/[\s,]/).forEach(type =>
-      (inputData[getKey(target)][type] || inputData[type] ?
-        target.value = target.value.replace(...(inputData[getKey(target)][type] || inputData[type])) : null)) : null);
+    getKey = target => {
+      if (target.tagName === 'INPUT') {
+        return;
+      }
+      if (target.getAttribute('name')) {
+        return `${target.tagName.toLowerCase()}[name="${target.getAttribute('name')}"]`;
+      }
+      if (target.classList[0]) {
+        return `${target.tagName.toLowerCase()}.${target.classList[0]}`;
+      }
+    },
+    inputHandling  = (target, types = 'input') => {
+      const key = getKey(target);
+
+      if (key) {
+        types.split(/[\s,]/).forEach(type => {
+          const action = inputData[key][type] || inputData[type];
+
+          if (action) {
+            target.value = target.value.replace(...action);
+          }
+        });
+      }
+    };
 
   document.addEventListener('input', ({ target }) => inputHandling(target));
   document.addEventListener('blur',

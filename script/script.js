@@ -212,25 +212,28 @@ const smoothScrollOfLink = event => {
 
 // Input
 (() => {
-  document.addEventListener('input', ({ target }) => {
-    if (!target.matches('input.calc-item, input.top-form, .mess, .form-name, .form-email, .form-phone')) {
-      return;
-    }
-    target.matches('input.calc-item') ? target.value = target.value.replace(/\D/g, '') : null;
-    if (target.matches('input.top-form, .mess, .form-name, .form-email, .form-phone')) {
-      target.matches('#form2-name, #form2-message, .form-name') ?
-        target.value = target.value.replace(/[^а-яё-\s]+/gi, '') : null;
-      target.matches('#form2-email, .form-email') ? target.value = target.value.replace(/[^\w"@-_.!~*']+/gi, '') : null;
-      target.matches('#form2-phone, .form-phone') ? target.value = target.value.replace(/[^\d()-]+/g, '') : null;
-    }
-  });
-  document.addEventListener('blur', ({ target }) => {
-    if (!target.matches('input.top-form, .mess, .form-name, .form-email, .form-phone')) {
-      return;
-    }
-    target.value = target.value.replace(/([\s-()])(?=[\s-()]*\1)/g, '')
-      .replace(/^([\s-]*)|([\s-]*)$/g, '');
-    target.matches('#form2-name, .form-name') ? target.value = target.value
-      .replace(/[^-\s]+/gi, str => str[0].toUpperCase() + str.slice(1).toLowerCase()) : null;
-  }, true);
+  const
+    inputData = {
+      replayspecial: [/([-()@_.!~*'])(?=[-()@_.!~*']*\1)/g, ''],
+      replayspace: [/([\s])(?=[\s]*\1)/g, ''],
+      trim: [/^([\s-]*)|([\s-]*)$/g, ''],
+      'input.calc-item': { input: [/\D/g, ''] },
+      'input[name="user_name"]': {
+        input: [/[^а-яё-\s]+/gi, ''],
+        format: [/[^-\s]+/gi, str => str[0].toUpperCase() + str.slice(1).toLowerCase()]
+      },
+      'input[name="user_email"]': { input: [/[^\w@_.!~*'-]+/gi, ''] },
+      'input[name="user_phone"]': { input: [/[^\d()-]+/g, ''] },
+      'input[name="user_message"]': { input: [/[^а-яё-\s]+/gi, ''] }
+    },
+    getKey = target => (target.tagName === 'INPUT' ?
+      target.getAttribute('name') ? `${target.tagName.toLowerCase()}[name="${target.getAttribute('name')}"]` :
+        target.classList[0] ? `${target.tagName.toLowerCase()}.${target.classList[0]}` : null : null),
+    inputHandling  = (target, types = 'input') => (getKey(target) ? types.split(/[\s,]/).forEach(type =>
+      (inputData[getKey(target)][type] || inputData[type] ?
+        target.value = target.value.replace(...(inputData[getKey(target)][type] || inputData[type])) : null)) : null);
+
+  document.addEventListener('input', ({ target }) => inputHandling(target));
+  document.addEventListener('blur',
+    ({ target }) => inputHandling(target, 'replayspecial, replayspace, trim, format'), true);
 })();

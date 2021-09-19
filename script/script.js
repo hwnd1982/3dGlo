@@ -227,7 +227,7 @@ const smoothScrollOfLink = event => {
       'input[name="user_message"]': { input: [/[^а-яё-\s]+/gi, ''] }
     },
     getKey = target => {
-      if (target.tagName === 'INPUT') {
+      if (!target.tagName === 'INPUT') {
         return;
       }
       if (target.getAttribute('name')) {

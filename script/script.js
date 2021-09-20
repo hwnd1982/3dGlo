@@ -1,3 +1,35 @@
+const
+  smoothScrollOfLink = event => {
+    const
+      target = event.target.tagName === 'A' ? event.target : event.target.closest('a');
+    if (target) {
+      const
+        href = target.getAttribute('href'),
+        domRect = href !== '#' ? document.querySelector(href).getBoundingClientRect() : 0;
+
+      event.preventDefault();
+      scrollTo({ top: domRect ? domRect.top + window.pageYOffset : 0, behavior: "smooth" });
+    }
+  },
+  makeEaseOut = timing => timeFraction => 1 - timing(1 - timeFraction),
+  square = timeFraction => Math.pow(timeFraction, 2),
+  animate = ({ duration, draw, timing }) => {
+    const
+      start = performance.now(),
+      requestID = requestAnimationFrame(function animate(time) {
+        const
+          timeFraction = (time - start) / duration,
+          progress = timing(timeFraction > 1 ? 1 : timeFraction),
+          stop = draw.call(null, progress);
+
+        if (timeFraction < 1 && !stop) {
+          return requestAnimationFrame(animate);
+        } else {
+          cancelAnimationFrame(requestID);
+        }
+      });
+  };
+
 // Timer
 (deadline => {
   let id = 0;
@@ -27,20 +59,7 @@
     };
   updateClock();
   id = setInterval(updateClock, 1000);
-})('10 sept 2021');
-
-const smoothScrollOfLink = event => {
-  const
-    target = event.target.tagName === 'A' ? event.target : event.target.closest('a');
-  if (target) {
-    const
-      href = target.getAttribute('href'),
-      domRect = href !== '#' ? document.querySelector(href).getBoundingClientRect() : 0;
-
-    event.preventDefault();
-    scrollTo({ top: domRect ? domRect.top + window.pageYOffset : 0, behavior: "smooth" });
-  }
-};
+})('23 sept 2021');
 
 // Menu & smoothScroll
 (() => {
@@ -246,7 +265,22 @@ const smoothScrollOfLink = event => {
     calcCount = calcBlock.querySelector('.calc-count'),
     totalValue = document.getElementById('total'),
     countSum = (price, typeValue, squareValue, countValue, dayValue) => (typeValue && squareValue ?
-      Math.floor(price * typeValue * squareValue * countValue * dayValue) : 0);
+      Math.ceil(price * typeValue * squareValue * countValue * dayValue) : 0),
+    drawCalculation = (item, newValue, progress) => {
+      if (newValue === +item.textContent) {
+        return true;
+      } else {
+        item.textContent = Math[(newValue > +item.textContent ? 'ceil' : 'floor')](
+          +item.textContent + progress * (newValue - item.textContent));
+      }
+    },
+    addCalculationAnimation = (item, newValue) => {
+      animate({
+        duration: 2000,
+        timing: makeEaseOut(square),
+        draw: drawCalculation.bind(null, item, newValue)
+      });
+    };
 
   calcBlock.addEventListener('change', ({ target }) => {
     const
@@ -256,7 +290,11 @@ const smoothScrollOfLink = event => {
       countValue = calcCount.value > 1 ? 1 + (calcCount.value - 1) / 10 : 1;
 
     if (target.matches('select, input')) {
-      totalValue.textContent = countSum(price, typeValue, squareValue, countValue, dayValue);
+      const newValue = countSum(price, typeValue, squareValue, countValue, dayValue);
+
+      if (newValue !== +totalValue.textContent) {
+        addCalculationAnimation(totalValue, newValue);
+      }
     }
   });
 })(100);

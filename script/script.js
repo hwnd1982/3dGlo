@@ -265,7 +265,7 @@ const
     calcCount = calcBlock.querySelector('.calc-count'),
     totalValue = document.getElementById('total'),
     countSum = (price, typeValue, squareValue, countValue, dayValue) => (typeValue && squareValue ?
-      Math.ceil(price * typeValue * squareValue * countValue * dayValue) : 0),
+      Math.floor(price * typeValue * squareValue * countValue * dayValue) : 0),
     drawCalculation = (item, newValue, progress) => {
       if (newValue === +item.textContent) {
         return true;
@@ -282,7 +282,7 @@ const
       });
     };
 
-  calcBlock.addEventListener('change', ({ target }) => {
+  calcBlock.addEventListener('input', ({ target }) => {
     const
       typeValue = calcType.options[calcType.selectedIndex].value,
       squareValue = calcSquare.value,

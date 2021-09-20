@@ -210,7 +210,7 @@ const smoothScrollOfLink = event => {
   command.addEventListener('mouseout', toggleDataImg);
 })();
 
-// Input
+// input
 (() => {
   document.addEventListener('input', ({ target }) => {
     if (!target.matches('input.calc-item, input.top-form, .mess, .form-name, .form-email, .form-phone')) {
@@ -235,3 +235,28 @@ const smoothScrollOfLink = event => {
       .replace(/[^-\s]+/gi, str => str[0].toUpperCase() + str.slice(1).toLowerCase()) : null;
   }, true);
 })();
+
+// calc
+((price = 100) => {
+  const
+    calcBlock = document.querySelector('.calc-block'),
+    calcType = calcBlock.querySelector('.calc-type'),
+    calcSquare = calcBlock.querySelector('.calc-square'),
+    calcDay = calcBlock.querySelector('.calc-day'),
+    calcCount = calcBlock.querySelector('.calc-count'),
+    totalValue = document.getElementById('total'),
+    countSum = (price, typeValue, squareValue, countValue, dayValue) => (typeValue && squareValue ?
+      Math.floor(price * typeValue * squareValue * countValue * dayValue) : 0);
+
+  calcBlock.addEventListener('change', ({ target }) => {
+    const
+      typeValue = calcType.options[calcType.selectedIndex].value,
+      squareValue = calcSquare.value,
+      dayValue = calcDay.value && calcDay.value < 5 ? 2 : calcDay.value && calcDay.value < 10 ? 1.5 : 1,
+      countValue = calcCount.value > 1 ? 1 + (calcCount.value - 1) / 10 : 1;
+
+    if (target.matches('select, input')) {
+      totalValue.textContent = countSum(price, typeValue, squareValue, countValue, dayValue);
+    }
+  });
+})(100);

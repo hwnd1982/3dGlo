@@ -265,7 +265,7 @@ const
     calcCount = calcBlock.querySelector('.calc-count'),
     totalValue = document.getElementById('total'),
     countSum = (price, typeValue, squareValue, countValue, dayValue) => (typeValue && squareValue ?
-      Math.floor(price * typeValue * squareValue * countValue * dayValue) : 0),
+      Math.ceil(price * typeValue * squareValue * countValue * dayValue) : 0),
     drawCalculation = (item, newValue, progress) => {
       if (newValue === +item.textContent) {
         return true;

@@ -239,7 +239,7 @@ const
       target.matches('input[name="user_name"], input[name="user_message"]') ?
         target.value = target.value.replace(/[^а-яё-\s]+/gi, '') : null;
       target.matches('input[name="user_email"]') ? target.value = target.value.replace(/[^\w"@-_.!~*']+/gi, '') : null;
-      target.matches('input[name="user_phone"]') ? target.value = target.value.replace(/[^\d()-]+/g, '') : null;
+      target.matches('input[name="user_phone"]') ? target.value = target.value.replace(/[^+\d()-]+/g, '') : null;
     }
   });
   document.addEventListener('change', ({ target }) => {
@@ -252,6 +252,8 @@ const
       .replace(/^([\s-]*)|([\s-]*)$/g, '');
     target.matches('input[name="user_name"]') ? target.value = target.value
       .replace(/[^-\s]+/gi, str => str[0].toUpperCase() + str.slice(1).toLowerCase()) : null;
+    target.matches('input[name="user_phone"]') ? target.value = target.value
+      .replace(/\+/g, '').replace(/^\+?[78]?/g, '+7') : null;
   }, true);
 })();
 

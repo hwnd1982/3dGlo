@@ -229,33 +229,33 @@ const
   command.addEventListener('mouseout', toggleDataImg);
 })();
 
-// input
+// formInput
 (() => {
   document.addEventListener('input', ({ target }) => {
-    if (!target.matches('input.calc-item, input.top-form, .mess, .form-name, .form-email, .form-phone')) {
+    if (!target.matches(
+      'input[name="user_name"], input[name="user_email"], input[name="user_phone"], input[name="user_message"]')) {
       return;
-    }
-    target.matches('input.calc-item') ? target.value = target.value.replace(/\D/g, '') : null;
-    if (target.matches('input.top-form, .mess, .form-name, .form-email, .form-phone')) {
-      target.matches('#form2-name, #form2-message, .form-name') ?
+    } else {
+      target.matches('input[name="user_name"], input[name="user_message"]') ?
         target.value = target.value.replace(/[^а-яё-\s]+/gi, '') : null;
-      target.matches('#form2-email, .form-email') ? target.value = target.value.replace(/[^\w"@-_.!~*']+/gi, '') : null;
-      target.matches('#form2-phone, .form-phone') ? target.value = target.value.replace(/[^\d()-]+/g, '') : null;
+      target.matches('input[name="user_email"]') ? target.value = target.value.replace(/[^\w"@-_.!~*']+/gi, '') : null;
+      target.matches('input[name="user_phone"]') ? target.value = target.value.replace(/[^\d()-]+/g, '') : null;
     }
   });
-  document.addEventListener('blur', ({ target }) => {
-    if (!target.matches('input.top-form, .mess, .form-name, .form-email, .form-phone')) {
+  document.addEventListener('change', ({ target }) => {
+    if (!target.matches(
+      'input[name="user_name"], input[name="user_email"], input[name="user_phone"], input[name="user_message"]')) {
       return;
     }
     target.value = target.value.replace(/([-()@_.!~*'])(?=[-()@_.!~*']*\1)/g, '')
       .replace(/([\s])(?=[\s]*\1)/g, '')
       .replace(/^([\s-]*)|([\s-]*)$/g, '');
-    target.matches('#form2-name, .form-name') ? target.value = target.value
+    target.matches('input[name="user_name"]') ? target.value = target.value
       .replace(/[^-\s]+/gi, str => str[0].toUpperCase() + str.slice(1).toLowerCase()) : null;
   }, true);
 })();
 
-// calc
+// calcInput & calc
 ((price = 100) => {
   const
     calcBlock = document.querySelector('.calc-block'),
@@ -283,6 +283,7 @@ const
     };
 
   calcBlock.addEventListener('input', ({ target }) => {
+    target.matches('input.calc-item') ? target.value = target.value.replace(/\D/g, '') : null;
     const
       typeValue = calcType.options[calcType.selectedIndex].value,
       squareValue = calcSquare.value,

@@ -236,9 +236,12 @@ const
       'input[name="user_name"], input[name="user_email"], input[name="user_phone"], input[name="user_message"]')) {
       return;
     } else {
-      target.matches('input[name="user_name"], input[name="user_message"]') ?
-        target.value = target.value.replace(/[^а-яё-\s]+/gi, '') : null;
-      target.matches('input[name="user_email"]') ? target.value = target.value.replace(/[^\w"@-_.!~*']+/gi, '') : null;
+      target.matches('input[name="user_name"]') ?
+        target.value = target.value.replace(/[^а-яё\s]+/gi, '') : null;
+      target.matches('input[name="user_message"]') ?
+        target.value = target.value.replace(/[^а-яё\d\s!?.,-]+/gi, '') : null;
+      target.matches('input[name="user_email"]') ?
+        target.value = target.value.replace(/[^\w\d@"-_.!~*']+/gi, '') : null;
       target.matches('input[name="user_phone"]') ? target.value = target.value.replace(/[^+\d()-]+/g, '') : null;
     }
   });
@@ -301,3 +304,75 @@ const
     }
   });
 })(100);
+
+// send-ajax form
+const sendForm = form => {
+  let timerLifeOfStatusMessage;
+  const
+    errorMassage = 'Что-то пошло не так...',
+    loadMessage = 'Загрузка...',
+    successMessage = 'Спасибо! Мы скоро с вами свяжемся!',
+    statusMessage = form.appendChild(document.createElement('div')),
+    hideStatusMessage = time => setTimeout(() => {
+      statusMessage.style.cssText = '';
+      statusMessage.textContent = '';
+    }, time),
+    clearForm = () => {
+      [...form.elements].forEach(elem => {
+        elem.value = '';
+        elem.classList.remove('success');
+      });
+    },
+    outputData = () => {
+      statusMessage.textContent = successMessage;
+      clearForm();
+      timerLifeOfStatusMessage = hideStatusMessage(3000);
+    },
+    errorData = error => {
+      console.error(error);
+      statusMessage.textContent = errorMassage;
+      timerLifeOfStatusMessage = hideStatusMessage(3000);
+    },
+    postData = (body, outputData, errorData) => {
+      const request = new XMLHttpRequest();
+
+      request.addEventListener('readystatechange', () => {
+        if (request.readyState !== 4) {
+          return;
+        } else {
+          if (request.status === 200) {
+            outputData();
+          } else {
+            errorData(request.status);
+          }
+        }
+      });
+      request.open('POST', './server.php');
+      request.setRequestHeader('Content-Type', 'application/json');
+      request.send(JSON.stringify(body));
+    };
+
+  form.addEventListener('submit', event => {
+    event.preventDefault();
+    if (form.classList.contains('invalid')) {
+      return;
+    } else {
+      const formData = new FormData(form), body = {};
+
+      formData.forEach((value, key) => body[key] = value);
+      statusMessage.style.cssText =
+        ` 
+          height: 100px;
+          font-size: 2rem;
+          color: #ffffff;
+        `;
+      statusMessage.textContent = loadMessage;
+      if (timerLifeOfStatusMessage) {
+        clearTimeout(timerLifeOfStatusMessage);
+      }
+      postData(body, outputData, errorData);
+    }
+  });
+};
+
+document.querySelectorAll('form').forEach(sendForm);

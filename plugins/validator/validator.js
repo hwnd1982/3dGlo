@@ -11,16 +11,17 @@ class Validator {
   init(style) {
     !style ? this.applyStyle() : null;
     this.setPattern();
-    this.form.addEventListener('submit', event => {
+    this.form.addEventListener('submit', () => {
       this.elementsForm.forEach(elem => this.checkIt({ target: elem }));
-      this.error.size ? event.preventDefault() : null;
+      this.error.size ? this.form.classList.add('invalid') : this.form.classList.remove('invalid');
     });
     this.elementsForm.forEach(elem => {
       const wrap = elem.parentElement.appendChild(document.createElement('div'));
       wrap.classList.add('wrap');
       wrap.append(elem);
       elem.removeAttribute('required');
-      elem.addEventListener('change', this.checkIt.bind(this));
+      elem.addEventListener('input', this.checkIt.bind(this));
+      elem.addEventListener('blur', this.checkIt.bind(this));
     });
   }
   checkIt({ target }) {
@@ -93,10 +94,11 @@ class Validator {
     document.head.append(style);
   }
   setPattern() {
-    this.pattern.phone = this.pattern.phone || /^\+?[78]?([-()]*\d){10}$/;
-    this.pattern.email = this.pattern.email || /^\w+@\w+\.\w{2,}$/;
+    this.pattern.phone = this.pattern.phone || /^\+?[78](([-()]*\d){10})$/;
+    this.pattern.email = this.pattern.email || /^[\w\d"-_.!~*']*@[\w\d"-_.!~*']*.\w{2,}$/;
     this.pattern.name = this.pattern.name || /^([А-ЯЁ]([а-яё]+)?)([\s][А-ЯЁ]([а-яё]+)?)*([\s][А-ЯЁ]([а-яё]+)?)?$/;
-    this.pattern.message = this.pattern.message || /^([А-ЯЁа-яё]+)([\s][А-ЯЁа-яё]+)*([\s][А-ЯЁа-яё]+)?$/;
+    this.pattern.message = this.pattern.message ||
+      /^([\dа-яё]+)(([?!.,])?(\s-)?([\s][\dа-яё]+))*([\s][\dа-яё]+)?([!?.]{0,3})?$/i;
   }
 }
 

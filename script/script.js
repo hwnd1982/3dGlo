@@ -316,6 +316,9 @@ const sendForm = form => {
     hideStatusMessage = time => setTimeout(() => {
       statusMessage.style.cssText = '';
       statusMessage.textContent = '';
+      if (form.closest('.popup')) {
+        form.closest('.popup').style.display = 'none';
+      }
     }, time),
     clearForm = () => {
       [...form.elements].forEach(elem => {

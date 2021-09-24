@@ -350,14 +350,9 @@ const sendForm = event => {
         }
       </style>
 
-      <svg class="animate" viewbox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+      <svg class="animate" viewbox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
         <path
-          d="M37.304 11.282l1.414 1.414-26.022 26.02-1.414-1.413z"
-          stroke="#bd313e"
-          fill="transparent"
-        />
-        <path
-          d="M12.696 11.282l26.022 26.02-1.414 1.415-26.022-26.02z"
+          d="m6.5 22.8l2.7 2.7 6.8-6.8 6.8 6.8 2.7-2.7-6.8-6.8 6.8-6.8-2.7-2.7-6.8 6.8-6.8-6.8-2.7 2.7 6.8 6.8-6.8 6.8z"
           stroke="#bd313e"
           fill="transparent"
         />

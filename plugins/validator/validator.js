@@ -24,7 +24,6 @@ class Validator {
     });
   }
   checkIt({ target }) {
-    console.log(target);
     this.isValid(target) ? this.showSuccess(target) : this.showError(target);
   }
   isValid(elem) {

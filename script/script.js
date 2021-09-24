@@ -306,9 +306,10 @@ const
 })(100);
 
 // send-ajax form
-const sendForm = form => {
+const sendForm = event => {
   let timerLifeOfStatusMessage;
   const
+    form = event.target,
     errorMassage = 'Что-то пошло не так...',
     loadMessage = 'Загрузка...',
     successMessage = 'Спасибо! Мы скоро с вами свяжемся!',
@@ -355,27 +356,25 @@ const sendForm = form => {
       request.send(JSON.stringify(body));
     };
 
-  form.addEventListener('submit', event => {
-    event.preventDefault();
-    if (form.classList.contains('invalid')) {
-      return;
-    } else {
-      const formData = new FormData(form), body = {};
+  event.preventDefault();
+  if (form.classList.contains('invalid')) {
+    return;
+  } else {
+    const formData = new FormData(form), body = {};
 
-      formData.forEach((value, key) => body[key] = value);
-      statusMessage.style.cssText =
+    formData.forEach((value, key) => body[key] = value);
+    statusMessage.style.cssText =
         ` 
           height: 100px;
           font-size: 2rem;
           color: #ffffff;
         `;
-      statusMessage.textContent = loadMessage;
-      if (timerLifeOfStatusMessage) {
-        clearTimeout(timerLifeOfStatusMessage);
-      }
-      postData(body, outputData, errorData);
+    statusMessage.textContent = loadMessage;
+    if (timerLifeOfStatusMessage) {
+      clearTimeout(timerLifeOfStatusMessage);
     }
-  });
+    postData(body, outputData, errorData);
+  }
 };
 
-document.querySelectorAll('form').forEach(sendForm);
+document.body.addEventListener('submit', sendForm);

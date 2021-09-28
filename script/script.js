@@ -257,6 +257,8 @@ const
       .replace(/[^-\s]+/gi, str => str[0].toUpperCase() + str.slice(1).toLowerCase()) : null;
     target.matches('input[name="user_phone"]') ? target.value = target.value
       .replace(/\+/g, '').replace(/^\+?[78]?/g, '+7') : null;
+    target.matches('input[name="user_message"]') ? target.value = target.value
+      .replace(/\s[!.?]/g, str => str.trim()) : null;
   }, true);
 })();
 

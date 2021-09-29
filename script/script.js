@@ -557,7 +557,7 @@ const sendForm = event => {
       statusMessage.innerHTML = errorMassage;
       timerLifeOfStatusMessage = hideStatusMessage(3000);
     },
-    postData = (body, outputData, errorData) => {
+    postData = body => new Promise((resolve, reject) => {
       const request = new XMLHttpRequest();
 
       request.addEventListener('readystatechange', () => {
@@ -565,16 +565,16 @@ const sendForm = event => {
           return;
         } else {
           if (request.status === 200) {
-            outputData();
+            resolve();
           } else {
-            errorData(request.status);
+            reject(request.statusText);
           }
         }
       });
       request.open('POST', './server.php');
       request.setRequestHeader('Content-Type', 'application/json');
       request.send(JSON.stringify(body));
-    };
+    });
 
   event.preventDefault();
   if (form.classList.contains('invalid')) {
@@ -595,7 +595,7 @@ const sendForm = event => {
     if (timerLifeOfStatusMessage) {
       clearTimeout(timerLifeOfStatusMessage);
     }
-    postData(body, outputData, errorData);
+    postData(body).then(outputData).catch(errorData);
   }
 };
 

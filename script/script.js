@@ -312,7 +312,19 @@ const sendForm = event => {
   let timerLifeOfStatusMessage;
   const
     form = event.target,
-    errorMassage =
+    errorMassageColor = `#bd313e;
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+      </style>`,
+    successMessageColor = `#3da35a;
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+      </style>`,
+    svgAnimationByCSS =
       `
       <style>
         svg {
@@ -345,12 +357,10 @@ const sendForm = event => {
           }
 
           100% {
-            fill: #bd313e;
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-      </style>
+            fill: `,
+    errorMassage =
+      `
+      ${svgAnimationByCSS + errorMassageColor}
 
       <svg class="animate" viewbox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
         <path
@@ -377,75 +387,21 @@ const sendForm = event => {
           left: 0;
           top: 0;
         }
-
-        .sk-circle-bounce .sk-circle-2 {
-          transform: rotate(30deg);
+  ${(() => {
+    let str = '';
+    for (let i = 2; i <= 12; i++) {
+      str +=
+        `
+        .sk-circle-bounce .sk-circle-${i} {
+          transform: rotate(${30 * (i - 1)}deg);
         }
-        .sk-circle-bounce .sk-circle-3 {
-          transform: rotate(60deg);
+        .sk-circle-bounce .sk-circle-${i}:before {
+          animation-delay: ${-1.1 + ((i - 2) * 0.1)}s;
         }
-        .sk-circle-bounce .sk-circle-4 {
-          transform: rotate(90deg);
-        }
-        .sk-circle-bounce .sk-circle-5 {
-          transform: rotate(120deg);
-        }
-        .sk-circle-bounce .sk-circle-6 {
-          transform: rotate(150deg);
-        }
-        .sk-circle-bounce .sk-circle-7 {
-          transform: rotate(180deg);
-        }
-        .sk-circle-bounce .sk-circle-8 {
-          transform: rotate(210deg);
-        }
-        .sk-circle-bounce .sk-circle-9 {
-          transform: rotate(240deg);
-        }
-        .sk-circle-bounce .sk-circle-10 {
-          transform: rotate(270deg);
-        }
-        .sk-circle-bounce .sk-circle-11 {
-          transform: rotate(300deg);
-        }
-        .sk-circle-bounce .sk-circle-12 {
-          transform: rotate(330deg);
-        }
-
-        .sk-circle-bounce .sk-circle-2:before {
-          animation-delay: -1.1s;
-        }
-        .sk-circle-bounce .sk-circle-3:before {
-          animation-delay: -1s;
-        }
-        .sk-circle-bounce .sk-circle-4:before {
-          animation-delay: -0.9s;
-        }
-        .sk-circle-bounce .sk-circle-5:before {
-          animation-delay: -0.8s;
-        }
-        .sk-circle-bounce .sk-circle-6:before {
-          animation-delay: -0.7s;
-        }
-        .sk-circle-bounce .sk-circle-7:before {
-          animation-delay: -0.6s;
-        }
-        .sk-circle-bounce .sk-circle-8:before {
-          animation-delay: -0.5s;
-        }
-        .sk-circle-bounce .sk-circle-9:before {
-          animation-delay: -0.4s;
-        }
-        .sk-circle-bounce .sk-circle-10:before {
-          animation-delay: -0.3s;
-        }
-        .sk-circle-bounce .sk-circle-11:before {
-          animation-delay: -0.2s;
-        }
-        .sk-circle-bounce .sk-circle-12:before {
-          animation-delay: -0.1s;
-        }
-
+        `;
+    }
+    return str;
+  })()}
         .sk-child:before {
           content: "";
           display: block;
@@ -469,59 +425,19 @@ const sendForm = event => {
         }
       </style>
       <div class="sk-circle-bounce">
-        <div class="sk-child sk-circle-1"></div>
-        <div class="sk-child sk-circle-2"></div>
-        <div class="sk-child sk-circle-3"></div>
-        <div class="sk-child sk-circle-4"></div>
-        <div class="sk-child sk-circle-5"></div>
-        <div class="sk-child sk-circle-6"></div>
-        <div class="sk-child sk-circle-7"></div>
-        <div class="sk-child sk-circle-8"></div>
-        <div class="sk-child sk-circle-9"></div>
-        <div class="sk-child sk-circle-10"></div>
-        <div class="sk-child sk-circle-11"></div>
-        <div class="sk-child sk-circle-12"></div>
+  ${(() => {
+    let str = '';
+    for (let i = 1; i <= 12; i++) {
+      str += `
+        <div class="sk-child sk-circle-${i}"></div>`;
+    }
+    return str;
+  })()}
       </div>
       `,
     successMessage =
       `
-      <style>
-        svg {
-          width: 100%;
-          height: 100%;
-        }
-
-        path {
-          stroke-dasharray: 99.47578430175781;
-          stroke-dashoffset: -99.47578430175781;
-          fill: transparent;
-        }
-
-        svg.animate path {
-          animation: 1.7s ease forwards draw;
-          opacity: 1;
-        }
-
-        @keyframes draw {
-          0% {
-            opacity: 1;
-            stroke-dashoffset: -99.47578430175781;
-            fill: transparent;
-            transform: translateY(0);
-          }
-
-          50% {
-            stroke-dashoffset: 0;
-            fill: transparent;
-          }
-
-          100% {
-            fill: #3da35a;
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-      </style>
+      ${svgAnimationByCSS + successMessageColor}
 
       <svg class="animate" viewbox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
         <path
@@ -547,56 +463,48 @@ const sendForm = event => {
         elem.classList.remove('success');
       });
     },
-    outputData = () => {
+    outputData = response => {
+      if (response.status !== 200) {
+        throw new Error('status network not 200');
+      }
       statusMessage.innerHTML = successMessage;
       clearForm();
       timerLifeOfStatusMessage = hideStatusMessage(3000);
     },
-    errorData = error => {
-      console.error(error);
+    errorData = () => {
       statusMessage.innerHTML = errorMassage;
       timerLifeOfStatusMessage = hideStatusMessage(3000);
     },
-    postData = body => new Promise((resolve, reject) => {
-      const request = new XMLHttpRequest();
-
-      request.addEventListener('readystatechange', () => {
-        if (request.readyState !== 4) {
-          return;
-        } else {
-          if (request.status === 200) {
-            resolve();
-          } else {
-            reject(request.statusText);
-          }
-        }
+    postData = body =>
+      fetch('./server.php', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(body),
+        credentials: 'include'
       });
-      request.open('POST', './server.php');
-      request.setRequestHeader('Content-Type', 'application/json');
-      request.send(JSON.stringify(body));
-    });
 
   event.preventDefault();
   if (form.classList.contains('invalid')) {
     return;
-  } else {
-    const formData = new FormData(form), body = {};
-
-    formData.forEach((value, key) => body[key] = value);
-    statusMessage.style.cssText =
-        ` 
-          position: absolute;
-          left: 50%;
-          top: 50%;
-          transform: translate(-50%, -50%);
-          height: 150px;
-        `;
-    statusMessage.innerHTML = loadMessage;
-    if (timerLifeOfStatusMessage) {
-      clearTimeout(timerLifeOfStatusMessage);
-    }
-    postData(body).then(outputData).catch(errorData);
   }
+  const formData = new FormData(form), body = {};
+
+  formData.forEach((value, key) => body[key] = value);
+  statusMessage.style.cssText =
+    ` 
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      height: 150px;
+    `;
+  statusMessage.innerHTML = loadMessage;
+  if (timerLifeOfStatusMessage) {
+    clearTimeout(timerLifeOfStatusMessage);
+  }
+  postData(body).then(outputData).catch(errorData);
 };
 
 document.body.addEventListener('submit', sendForm);

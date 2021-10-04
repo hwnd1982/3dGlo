@@ -1,4 +1,4 @@
-class Validator {
+export default class Validator {
   constructor({ selector, pattern = {}, method, message }) {
     this.form = document.querySelector(selector);
     this.pattern = pattern;
@@ -101,5 +101,3 @@ class Validator {
       /^([\dа-яё]+)(([?!.,])?(\s-)?([\s][\dа-яё]+))*([\s][\dа-яё]+)?([!?.]{0,3})?$/i;
   }
 }
-
-export default Validator;

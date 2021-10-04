@@ -6,7 +6,7 @@ import slider from './modules/slider';
 import switchTeamPhoto from './modules/switchTeamPhoto';
 import formInputHandler from './modules/formInputHandler';
 import calcHandler from './modules/calcHandler';
-import Validator from '../plugins/validator/validator';
+import Validator from './modules/validator';
 import { errorMassage, loadMessage, successMessage } from './modules/messageSendForm';
 import sendForm from './modules/sendForm';
 

@@ -90,7 +90,6 @@ class SliderCarousel {
   }
   prevSlide(event) {
     event.preventDefault();
-    console.log('prev');
     if (this.options.loop || this.options.position > 0) {
       --this.options.position;
       if (this.options.position < 0) {
@@ -100,7 +99,6 @@ class SliderCarousel {
     }
   }
   addArrow() {
-    console.log('!!!');
     this.prev = document.createElement('div');
     this.next = document.createElement('div');
     this.prev.className = 'glo-slider__prev';

@@ -2,7 +2,7 @@ import countTimer from './modules/countTimer';
 import toggleMenu from './modules/toggleMenu';
 import togglePopUp from './modules/togglePopUp';
 import tabs from './modules/tabs';
-import slider from './modules/slider';
+import SliderCarousel from './modules/SliderCarousel ';
 import switchTeamPhoto from './modules/switchTeamPhoto';
 import formInputHandler from './modules/formInputHandler';
 import calcHandler from './modules/calcHandler';
@@ -19,7 +19,14 @@ togglePopUp();
 // tabs
 tabs();
 // slider
-slider();
+const slider = new SliderCarousel({
+  main: '.portfolio-slider',
+  wrap: '.portfolio-content',
+  loop: false,
+  position: 0,
+  slidesToShow: 1
+});
+slider.init();
 // switchTeamPhoto
 switchTeamPhoto();
 // formInputHandler

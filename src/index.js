@@ -22,8 +22,11 @@ tabs();
 const slider = new SliderCarousel({
   main: '.portfolio-slider',
   wrap: '.portfolio-content',
-  loop: false,
+  loop: true,
+  pagination: true,
   position: 0,
+  autoplay: true,
+  time: 2000,
   slidesToShow: 1
 });
 slider.init();

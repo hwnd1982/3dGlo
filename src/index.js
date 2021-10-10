@@ -2,7 +2,8 @@ import countTimer from './modules/countTimer';
 import toggleMenu from './modules/toggleMenu';
 import togglePopUp from './modules/togglePopUp';
 import tabs from './modules/tabs';
-import SliderCarousel from './modules/SliderCarousel ';
+// import slider from './modules/slider';
+import { SliderCarousel } from './modules/SliderCarousel ';
 import switchTeamPhoto from './modules/switchTeamPhoto';
 import formInputHandler from './modules/formInputHandler';
 import calcHandler from './modules/calcHandler';
@@ -23,8 +24,8 @@ const slider = new SliderCarousel({
   main: '.portfolio-slider',
   wrap: '.portfolio-content',
   loop: true,
-  pagination: true,
   position: 0,
+  pagination: true,
   autoplay: true,
   time: 2000,
   slidesToShow: 1
@@ -58,3 +59,28 @@ document.querySelectorAll('form').forEach((form, index) => {
 });
 // sendForm
 sendForm(loadMessage, successMessage, errorMassage);
+// carousel
+const carousel = new SliderCarousel({
+  main: '.companies-wrapper',
+  wrap: '.companies-hor',
+  loop: true,
+  position: 0,
+  autoplay: true,
+  time: 1500,
+  slidesToShow: 4,
+  responsive: [
+    {
+      breakpoint: 1024,
+      slidesToShow: 3
+    },
+    {
+      breakpoint: 768,
+      slidesToShow: 2
+    },
+    {
+      breakpoint: 576,
+      slidesToShow: 1
+    }
+  ]
+});
+carousel.init();

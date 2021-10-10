@@ -449,9 +449,11 @@ main a {
 .companies {
   padding: 5rem;
 }
+.companies-wrapper {
+  margin-bottom: 6.4rem;
+}
 .companies .companies-hor {
   width: 100%;
-  margin-bottom: 6.4rem;
 }
 .companies .companies-hor-item {
   margin: 0 1.2rem;

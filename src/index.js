@@ -3,7 +3,7 @@ import toggleMenu from './modules/toggleMenu';
 import togglePopUp from './modules/togglePopUp';
 import tabs from './modules/tabs';
 // import slider from './modules/slider';
-import { SliderCarousel } from './modules/SliderCarousel ';
+import SliderCarousel from './modules/SliderCarousel ';
 import switchTeamPhoto from './modules/switchTeamPhoto';
 import formInputHandler from './modules/formInputHandler';
 import calcHandler from './modules/calcHandler';
@@ -12,7 +12,7 @@ import { errorMassage, loadMessage, successMessage } from './modules/messageSend
 import sendForm from './modules/sendForm';
 
 // countTimer
-countTimer('10 oct 2021');
+countTimer('20 oct 2021');
 // toggleMenu & smoothScroll
 toggleMenu();
 // togglePopUp
@@ -23,11 +23,13 @@ tabs();
 const slider = new SliderCarousel({
   main: '.portfolio-slider',
   wrap: '.portfolio-content',
+  prev: '#arrow-left',
+  next: '#arrow-right',
   loop: true,
   position: 0,
   pagination: true,
   autoplay: true,
-  time: 2000,
+  time: 2500,
   slidesToShow: 1
 });
 slider.init();

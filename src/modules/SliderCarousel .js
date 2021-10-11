@@ -1,5 +1,3 @@
-let example = 0;
-
 class SliderCarousel {
   constructor({
     main,
@@ -17,7 +15,7 @@ class SliderCarousel {
   }) {
     const wrapElem = document.querySelector(wrap);
 
-    ++example;
+    this.example = 1;
     this.main = document.querySelector(main);
     this.wrap = {
       master: wrapElem,
@@ -47,6 +45,7 @@ class SliderCarousel {
     };
   }
   init() {
+    this.checkExample();
     if (!this.next || !this.prev) {
       this.addArrow();
     }
@@ -60,12 +59,17 @@ class SliderCarousel {
     if (this.options.autoplay) {
       this.startSlider();
       this.main.addEventListener('mouseover', event =>
-        (event.target.matches(`.glo-${example}-slider__buttons, .dot`) ? this.stopSlider() : null));
+        (event.target.matches(`.glo-${this.example}-slider__buttons, .dot`) ? this.stopSlider() : null));
       this.main.addEventListener('mouseout', event =>
-        (event.target.matches(`.glo-${example}-slider__buttons, .dot`) ? this.startSlider(event) : null));
+        (event.target.matches(`.glo-${this.example}-slider__buttons, .dot`) ? this.startSlider(event) : null));
     }
     if (this.responsive) {
       this.responsiveInit();
+    }
+  }
+  checkExample() {
+    while (document.querySelector(`.glo-${this.example}-slider`)) {
+      ++this.example;
     }
   }
   startSlider() {
@@ -75,9 +79,9 @@ class SliderCarousel {
     clearInterval(this.interval);
   }
   addGloClass() {
-    this.main.classList.add(`glo-${example}-slider`);
-    this.wrap.master.classList.add(`glo-${example}-slider__wrap`);
-    this.wrap.master.classList.add(`glo-${example}-slider__wrap_master`);
+    this.main.classList.add(`glo-${this.example}-slider`);
+    this.wrap.master.classList.add(`glo-${this.example}-slider__wrap`);
+    this.wrap.master.classList.add(`glo-${this.example}-slider__wrap_master`);
     if (this.options.position.master >= this.options.maxPosition) {
       this.options.position.slave = this.slides.slave.length;
       this.wrap.slave.style.transform = `translateX(${-this.options.widthSlide * this.options.position.slave}%)`;
@@ -86,38 +90,39 @@ class SliderCarousel {
       this.options.position.slave = this.slides.slave.length;
       this.wrap.slave.style.transform = `translateX(${-this.options.widthSlide * this.options.position.slave}%)`;
     }
-    this.wrap.slave.classList.add(`glo-${example}-slider__wrap`);
-    this.wrap.slave.classList.add(`glo-${example}-slider__wrap_slave`);
-    this.slides.master.forEach(item => item.classList.add(`glo-${example}-slider__item`));
-    this.slides.slave.forEach(item => item.classList.add(`glo-${example}-slider__item`));
-    this.prev.classList.add(`glo-${example}-slider__buttons`);
-    this.next.classList.add(`glo-${example}-slider__buttons`);
+    this.wrap.slave.classList.add(`glo-${this.example}-slider__wrap`);
+    this.wrap.slave.classList.add(`glo-${this.example}-slider__wrap_slave`);
+    this.slides.master.forEach(item => item.classList.add(`glo-${this.example}-slider__item`));
+    this.slides.slave.forEach(item => item.classList.add(`glo-${this.example}-slider__item`));
+    this.prev.classList.add(`glo-${this.example}-slider__buttons`);
+    this.next.classList.add(`glo-${this.example}-slider__buttons`);
   }
   addStyle() {
-    const style =  document.getElementById(`glo-${example}-slider-style`) || document.createElement('style');
+    const style =  document.getElementById(`glo-${this.example}-slider-style`) || document.createElement('style');
 
-    style.id = `glo-${example}-slider-style`;
+    style.id = `glo-${this.example}-slider-style`;
     document.body.append(style);
     style.textContent =
-      ` .glo-${example}-slider {
+      ` .glo-${this.example}-slider {
           overflow: hidden !important;
           position: relative !important;
         }
-        .glo-${example}-slider__wrap {
+        .glo-${this.example}-slider__wrap {
           position: relative !important;
-          background-color: #fff !important;
           z-index: 1;
           display: flex !important;
           width: 100% !important;
           transition: transform 0.5s !important;
           will-change: transform !important;
         }
-        .glo-${example}-slider__wrap.glo-${example}-slider__wrap_slave {
+        .glo-${this.example}-slider__wrap.glo-${this.example}-slider__wrap_slave {
           position: absolute !important;
           z-index: -1;
           top: 0 !important;
         }
-        .glo-${example}-slider__item {
+        .glo-${this.example}-slider__item {
+          display: flex !important;
+          justify-content: center !important;
           flex: 0 0 ${this.options.widthSlide}% !important;
           margin: auto 0 !important;
           position: static !important;
@@ -126,8 +131,8 @@ class SliderCarousel {
           transition: none !important;
           opacity: 1 !important;
         }
-        .glo-${example}-slider__next,
-        .glo-${example}-slider__prev {
+        .glo-${this.example}-slider__next,
+        .glo-${this.example}-slider__prev {
           position: absolute;
           transform: translate(0, -50%);
           top: 50%;
@@ -136,18 +141,46 @@ class SliderCarousel {
           cursor: pointer;
           z-index: 10;
         }
-        .glo-${example}-slider__next {
+        .glo-${this.example}-slider__next {
           right: 5px;
           border-left-color: #19b5fe;
         }
-        .glo-${example}-slider__prev {
+        .glo-${this.example}-slider__prev {
           left: 5px;
           border-right-color: #19b5fe;
+        }
+        @media (max-width: 690px) {
+          .glo-${this.example}-slider__next,
+          .glo-${this.example}-slider__prev {
+            border: 15px solid transparent;
+          }
+          .glo-${this.example}-slider__next {
+            right: 5px;
+            border-left-color: #19b5fe;
+          }
+          .glo-${this.example}-slider__prev {
+            left: 5px;
+            border-right-color: #19b5fe;
+          }
+        }
+        @media (max-width: 448px) {
+          .glo-${this.example}-slider__next,
+          .glo-${this.example}-slider__prev {
+            border: 10px solid transparent;
+          }
+          .glo-${this.example}-slider__next {
+            right: 5px;
+            border-left-color: #19b5fe;
+          }
+          .glo-${this.example}-slider__prev {
+            left: 5px;
+            border-right-color: #19b5fe;
+          }
         }
       `;
     if (this.dots) {
       style.textContent +=
-        ` .glo-${example}-slider__dots {
+        ` .glo-${this.example}-slider__dots {
             position: absolute;
             bottom: 20px;
             width: 100%;
@@ -158,7 +191,7 @@ class SliderCarousel {
             justify-content: center;
             z-index: 5;
           }
-          .glo-${example}-slider__dots .dot {
+          .glo-${this.example}-slider__dots .dot {
             cursor: pointer;
             height: 16px;
             width: 16px;
@@ -168,11 +201,11 @@ class SliderCarousel {
             display: inline-block;
             transition: background-color, transform 0.4s, -webkit-transform 0.4s;
           }
-          .glo-${example}-slider__dots .dot-active {
+          .glo-${this.example}-slider__dots .dot-active {
             background-color: #19b5fe;
             transform: scale(1.2);
           }
-          .glo-${example}-slider__dots .dot:hover {
+          .glo-${this.example}-slider__dots .dot:hover {
             background-color: #53c6fe;
             transform: scale(1.2);
           }`;
@@ -188,16 +221,12 @@ class SliderCarousel {
     ++this.options.position.master;
     ++this.options.position.slave;
     if (this.options.position.master >= 2 * this.slides.master.length - this.slidesToShow - 1) {
-      // this.wrap.master.style.zIndex = -1;
       this.main.prepend(this.wrap.master);
-      // this.wrap.slave.style.zIndex = 1;
       this.options.position.master = -this.slidesToShow -
         (2 * this.slides.master.length - this.slidesToShow - this.options.position.master);
     }
     if (this.options.position.slave >= 2 * this.slides.slave.length - this.slidesToShow - 1) {
-      // this.wrap.slave.style.zIndex = -1;
       this.main.prepend(this.wrap.slave);
-      // this.wrap.master.style.zIndex = 1;
       this.options.position.slave = -this.slidesToShow -
         (2 * this.slides.slave.length - this.slidesToShow - this.options.position.slave);
     }
@@ -231,15 +260,15 @@ class SliderCarousel {
   addArrow() {
     this.prev = document.createElement('div');
     this.next = document.createElement('div');
-    this.prev.className = `glo-${example}-slider__prev`;
-    this.next.className = `glo-${example}-slider__next`;
+    this.prev.className = `glo-${this.example}-slider__prev`;
+    this.next.className = `glo-${this.example}-slider__next`;
     this.main.append(this.prev);
     this.main.append(this.next);
   }
   addPagination() {
     const dotsList = this.main.appendChild(document.createElement('ul'));
 
-    dotsList.classList.add(`glo-${example}-slider__dots`);
+    dotsList.classList.add(`glo-${this.example}-slider__dots`);
     this.slides.master.forEach((elem, index) =>
       (dotsList.innerHTML += `<li class="dot${index === this.options.position.master ?
         ' dot-active' : ''}" id="dot${index}""></li>`));
@@ -273,6 +302,7 @@ class SliderCarousel {
       maxResponse = Math.max(...allResponse),
       checkResponse = () => {
         const widthWindow = document.documentElement.clientWidth;
+        this.stopSlider();
         if (widthWindow < maxResponse) {
           allResponse.forEach((item, index) => {
             if (widthWindow < item) {
@@ -286,6 +316,7 @@ class SliderCarousel {
           this.options.widthSlide = Math.floor(100 / this.slidesToShow);
           this.addStyle();
         }
+        this.startSlider();
       };
 
     checkResponse();
@@ -293,4 +324,4 @@ class SliderCarousel {
   }
 }
 
-export { SliderCarousel };
+export default SliderCarousel;

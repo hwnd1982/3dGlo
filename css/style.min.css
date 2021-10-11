@@ -388,6 +388,7 @@ main a {
   border-radius: 50%;
   -webkit-transition: background-color 0.2s;
   transition: background-color 0.2s;
+  transform: translate(0, -50%);
 }
 .portfolio-btn.prev {
   left: 20px;
